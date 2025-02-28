@@ -23,6 +23,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/leaderboard', leaderboardRouter);
 
-app.listen(PORT, () => {
-  console.log(`服务器正在运行在 http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`服务器正在运行在 http://0.0.0.0:${PORT}`);
 }); 

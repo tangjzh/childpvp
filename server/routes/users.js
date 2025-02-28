@@ -52,4 +52,42 @@ router.get('/children', authenticateToken, (req, res) => {
   );
 });
 
+// 设置积分
+router.post('/set-points/:userId', authenticateToken, (req, res) => {
+  const { userId } = req.params;
+  const { points } = req.body;
+
+  // 验证用户类型是否为管理员
+  if (req.user.userType !== 'admin') {
+    return res.status(403).json({ message: '只有管理员可以设置积分' });
+  }
+
+  db.run(`UPDATE users SET points = ? WHERE id = ?`, [points, userId], (err) => {
+    if (err) {
+      console.error('重置积分失败：', err);
+      return res.status(400).json({ message: '重置积分失败。' });
+    }
+    res.json({ message: '积分重置成功。' });
+  });
+});
+
+// 设置用户角色
+router.put('/set-role/:userId', authenticateToken, (req, res) => {
+  const { userId } = req.params;
+  const { userType } = req.body;
+  
+  // 验证用户类型是否为管理员
+  if (req.user.userType !== 'admin') {
+    return res.status(403).json({ message: '只有管理员可以设置用户角色' });
+  }
+
+  db.run(`UPDATE users SET userType = ? WHERE id = ?`, [userType, userId], (err) => {
+    if (err) {
+      console.error('设置用户角色失败：', err);
+      return res.status(400).json({ message: '设置用户角色失败。' });
+    }
+    res.json({ message: '用户角色设置成功。' });
+  });
+});
+
 module.exports = router; 
